@@ -1,21 +1,26 @@
 import React from "react";
 import {View, Text, StyleSheet, Image} from 'react-native';
 
-const Bubble = ({message, sender, time}) => {
+const Bubble = ({message, sender, time, isCurrentUser}) => {
     return (
-        <View style={{alignSelf:'flex-end', flexDirection:'row'}}>
-            <View style={styles.container}>
-                <Text style={styles.message}>{message || 'Hello hda saj kjsa jsa kusajisa usa  sdjkh sakhsa kusa mhisa sahjk sajhj sahjhn sjuian there'}</Text>
-                <View style={styles.bottomContainer}>
-                    <Text style={styles.bottomText}>
+        <View style={[styles.container, !isCurrentUser?{alignSelf:'flex-start'}:null]}>
+            <View style={[styles.messageBox, !isCurrentUser?{marginLeft:14, marginRight:0, borderBottomLeftRadius:0, borderBottomRightRadius:10, backgroundColor:'#D3D3D3'}:null]}>
+                <Text style={[styles.message, !isCurrentUser? {color:'#006AFF'}:null]}>
+                    {message || 'Hello hda saj kjsa jsa kusajisa usa  sdjkh sakhsa kusa mhisa sahjk sajhj sahjhn sjuian there'}
+                </Text>
+                <View style={[styles.bottomContainer, !isCurrentUser?{alignSelf:'flex-start'}:null]}>
+                    <Text style={[styles.bottomText, !isCurrentUser ? {color:'#006AFF', opacity:0.75}:null]}>
                         {sender || 'Cruzor Blade'}
                     </Text>
-                    <Text style={styles.bottomText}>
+                    <Text style={[styles.bottomText, !isCurrentUser ? {color:'#006AFF', opacity:0.75}:null]}>
                         {time || '12 min ago'}
                     </Text>
                 </View>
             </View>
-            <Image style={styles.chatside} source={require('./chatside.png')} />
+            <Image
+                style={[styles.chatside, !isCurrentUser?{left:0, tintColor:'#D3D3D3', transform:[{rotateY:'180deg'}]}:null]}
+                source={require('./chatside.png')}
+            />
         </View>
     )
 }
@@ -23,13 +28,16 @@ const Bubble = ({message, sender, time}) => {
 export default Bubble;
 
 const styles = StyleSheet.create({
-    container: {
+    container:{
+        alignSelf:'flex-end',
+        flexDirection:'row',
+        marginVertical:6
+    },
+    messageBox: {
         backgroundColor:'#006AFF',
-        // minHeight:80,
         marginRight:14,
         maxWidth:'73%',
         minWidth:'50%',
-        // justifyContent:'space-between',
         borderTopRightRadius:10,
         borderTopLeftRadius:10,
         borderBottomLeftRadius:10,
@@ -47,13 +55,14 @@ const styles = StyleSheet.create({
         alignSelf:'flex-end',
         position:'absolute',
         bottom:0,
-        width:170,
-        right:20,
+        // width:'60%',
+        // right:20,
         marginVertical:3
     },
     bottomText: {
         fontSize:13,
-        color:'#D3D3D3'
+        color:'#D3D3D3',
+        marginHorizontal:10
     },
     chatside:{
         tintColor:'#006AFF',
