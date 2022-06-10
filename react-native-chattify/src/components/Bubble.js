@@ -4,7 +4,7 @@ import {View, Text, StyleSheet, Image} from 'react-native';
 const Bubble = ({message, sender, time, isCurrentUser}) => {
     return (
         <View style={[styles.container, !isCurrentUser?{alignSelf:'flex-start'}:null]}>
-            <View style={[styles.messageBox, !isCurrentUser?{marginLeft:14, marginRight:0, borderBottomLeftRadius:0, borderBottomRightRadius:10, backgroundColor:'#D3D3D3'}:null]}>
+            <View style={[styles.messageBox, !isCurrentUser?{marginLeft:11, marginRight:0, borderBottomLeftRadius:0, borderBottomRightRadius:10, backgroundColor:'#D3D3D3'}:null]}>
                 <Text style={[styles.message, !isCurrentUser? {color:'#006AFF'}:null]}>
                     {message || 'Hello hda saj kjsa jsa kusajisa usa  sdjkh sakhsa kusa mhisa sahjk sajhj sahjhn sjuian there'}
                 </Text>
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     },
     messageBox: {
         backgroundColor:'#006AFF',
-        marginRight:14,
+        marginRight:11,
         maxWidth:'73%',
         minWidth:'50%',
         borderTopRightRadius:10,
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     chatside:{
         tintColor:'#006AFF',
         height:50,
-        width:15,
+        width:12,
         resizeMode:'stretch',
         position:'absolute',
         right:0,

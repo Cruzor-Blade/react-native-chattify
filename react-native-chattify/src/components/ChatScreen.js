@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {View, FlatList, StyleSheet, TextInput, Image, TouchableOpacity} from 'react-native';
 import Bubble from "./Bubble";
 
@@ -16,6 +16,7 @@ const coversation = [
 ];
 
 const ChatScreen = () => {
+    const [messages, setMessages] = useState(coversation);
     return (
         <View style={{flexDirection:'column'}}>
             <View style={styles.messageView}>
@@ -31,7 +32,7 @@ const ChatScreen = () => {
                 </TouchableOpacity>
             </View>
             <FlatList
-            data={coversation}
+            data={messages}
             keyExtractor={item => item.message.toString()}
             renderItem={({item}) => 
                 <Bubble
