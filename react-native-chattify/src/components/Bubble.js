@@ -1,5 +1,5 @@
 import React from "react";
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
 import { PanGestureHandler } from "react-native-gesture-handler";
 import Animated, { Easing,
     interpolateNode,
@@ -12,7 +12,8 @@ import Animated, { Easing,
     Extrapolation
 } from "react-native-reanimated";
 
-const Bubble = ({message, sender, time, isCurrentUser}) => {
+const Bubble = ({message, sender, time, isCurrentUser, onReply, id}) => {
+    const windowWidth = Dimensions.get('window').width;
     const translateX = useSharedValue(0);
 
     const panGestureEvent = useAnimatedGestureHandler({
@@ -20,17 +21,16 @@ const Bubble = ({message, sender, time, isCurrentUser}) => {
             context.translateX = translateX.value //We can store global and retrievable data in the context object
         },
         onActive: (event, context) => {
-            const interpoledTrans = interpolate(event.translationX, [0, 400], [0, 200], {
+            const interpoledTrans = interpolate(event.translationX, [0, windowWidth], [0, windowWidth/3], {
                 extrapolateLeft:Extrapolation.CLAMP,
-                extrapolateRight:Extrapolation.CLAMP,
+                extrapolateRight:Extrapolation.EXTEND,
             });
 
             translateX.value = interpoledTrans + context.translateX;
         },
         onEnd: () => {
             translateX.value = withTiming(0, {
-                duration:100, //in ms
-                // easing: Easing.in()
+                duration:100, 
             });
         },
     });
