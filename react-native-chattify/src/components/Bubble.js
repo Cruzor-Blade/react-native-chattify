@@ -9,12 +9,18 @@ import Animated, { Easing,
     withTiming,
     Extrapolate,
     interpolate,
-    Extrapolation
+    Extrapolation,
+    runOnJS,
+    useDerivedValue
 } from "react-native-reanimated";
 
 const Bubble = ({message, sender, time, isCurrentUser, onReply, id}) => {
     const windowWidth = Dimensions.get('window').width;
     const translateX = useSharedValue(0);
+
+    const onDragEnd = () => { //On drag end is a wrapper around onReply for js execution
+        onReply(id);
+    };
 
     const panGestureEvent = useAnimatedGestureHandler({
         onStart: (event, context) => {
@@ -29,6 +35,9 @@ const Bubble = ({message, sender, time, isCurrentUser, onReply, id}) => {
             translateX.value = interpoledTrans + context.translateX;
         },
         onEnd: () => {
+            if (translateX.value >=30) {
+                runOnJS(onDragEnd)();
+            }
             translateX.value = withTiming(0, {
                 duration:100, 
             });

@@ -20,6 +20,7 @@ const ChatScreen = () => {
     const [replyTo, setReplyTo] = useState(null);
 
     const onReply = (id) => {
+        // "worklet"; //This specifies that the function is to be ran on the UI thread
         console.log('Replying to: ', id);
     }
     return (
@@ -42,7 +43,7 @@ const ChatScreen = () => {
             renderItem={({item}) => 
                 <Bubble
                     onReply={onReply}
-                    id={() => item.id}
+                    id={item.id}
                     sender={item.sender}
                     message={item.message}
                     time={item.time}
