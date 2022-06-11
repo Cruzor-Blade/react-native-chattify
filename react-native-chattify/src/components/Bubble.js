@@ -27,7 +27,7 @@ const Bubble = ({message, sender, time, isCurrentUser, onReply, id}) => {
             context.translateX = translateX.value //We can store global and retrievable data in the context object
         },
         onActive: (event, context) => {
-            const interpoledTrans = interpolate(event.translationX, [0, windowWidth], [0, windowWidth/3], {
+            const interpoledTrans = interpolate(event.translationX, [0, windowWidth/2, windowWidth], [0, windowWidth/4, windowWidth/3], {
                 extrapolateLeft:Extrapolation.CLAMP,
                 extrapolateRight:Extrapolation.EXTEND,
             });
