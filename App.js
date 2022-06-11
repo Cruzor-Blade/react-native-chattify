@@ -6,10 +6,13 @@ import Svg,
 } from 'react-native-svg';
 import { Bubble } from './react-native-chattify';
 import ChatScreen from './react-native-chattify/src/components/ChatScreen';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const App = () => {
   return (
-    <ChatScreen/>
+    <GestureHandlerRootView>
+      <ChatScreen/>
+    </GestureHandlerRootView>
   )
 }
 

@@ -1,27 +1,56 @@
 import React from "react";
 import {View, Text, StyleSheet, Image} from 'react-native';
+import { PanGestureHandler } from "react-native-gesture-handler";
+import Animated, { Easing, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 const Bubble = ({message, sender, time, isCurrentUser}) => {
+    const translateX = useSharedValue(0);
+
+    const panGestureEvent = useAnimatedGestureHandler({
+        onStart: (event, context) => {
+            context.translateX = translateX.value //We can store global and retrievable data in the context object
+        },
+        onActive: (event, context) => {
+            translateX.value = event.translationX + context.translateX;
+        },
+        onEnd: () => {
+            translateX.value = withTiming(0, {
+                duration:100, //in ms
+                easing: Easing.in()
+            });
+        },
+    });
+
+    const rBubbleStyles = useAnimatedStyle(() => {
+        return {
+            transform:[
+                {translateX:translateX.value}
+            ]
+        };
+    });
+
     return (
-        <View style={[styles.container, !isCurrentUser?{alignSelf:'flex-start'}:null]}>
-            <View style={[styles.messageBox, !isCurrentUser?{marginLeft:11, marginRight:0, borderBottomLeftRadius:0, borderBottomRightRadius:10, backgroundColor:'#D3D3D3'}:null]}>
-                <Text style={[styles.message, !isCurrentUser? {color:'#006AFF'}:null]}>
-                    {message || 'Hello hda saj kjsa jsa kusajisa usa  sdjkh sakhsa kusa mhisa sahjk sajhj sahjhn sjuian there'}
-                </Text>
-                <View style={[styles.bottomContainer, !isCurrentUser?{alignSelf:'flex-start'}:null]}>
-                    <Text style={[styles.bottomText, !isCurrentUser ? {color:'#006AFF', opacity:0.75}:null]}>
-                        {sender || 'Cruzor Blade'}
+        <PanGestureHandler onGestureEvent={panGestureEvent}>
+            <Animated.View style={[styles.container, rBubbleStyles, !isCurrentUser?{alignSelf:'flex-start'}:null]}>
+                <View style={[styles.messageBox, !isCurrentUser?{marginLeft:11, marginRight:0, borderBottomLeftRadius:0, borderBottomRightRadius:10, backgroundColor:'#D3D3D3'}:null]}>
+                    <Text style={[styles.message, !isCurrentUser? {color:'#006AFF'}:null]}>
+                        {message || 'Hello hda saj kjsa jsa kusajisa usa  sdjkh sakhsa kusa mhisa sahjk sajhj sahjhn sjuian there'}
                     </Text>
-                    <Text style={[styles.bottomText, !isCurrentUser ? {color:'#006AFF', opacity:0.75}:null]}>
-                        {time || '12 min ago'}
-                    </Text>
+                    <View style={[styles.bottomContainer, !isCurrentUser?{alignSelf:'flex-start'}:null]}>
+                        <Text style={[styles.bottomText, !isCurrentUser ? {color:'#006AFF', opacity:0.75}:null]}>
+                            {sender || 'Cruzor Blade'}
+                        </Text>
+                        <Text style={[styles.bottomText, !isCurrentUser ? {color:'#006AFF', opacity:0.75}:null]}>
+                            {time || '12 min ago'}
+                        </Text>
+                    </View>
                 </View>
-            </View>
-            <Image
-                style={[styles.chatside, !isCurrentUser?{left:0, tintColor:'#D3D3D3', transform:[{rotateY:'180deg'}]}:null]}
-                source={require('./chatside.png')}
-            />
-        </View>
+                <Image
+                    style={[styles.chatside, !isCurrentUser?{left:0, tintColor:'#D3D3D3', transform:[{rotateY:'180deg'}]}:null]}
+                    source={require('./chatside.png')}
+                />
+            </Animated.View>
+        </PanGestureHandler>
     )
 }
 
