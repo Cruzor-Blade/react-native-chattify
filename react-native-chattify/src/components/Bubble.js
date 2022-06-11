@@ -1,7 +1,16 @@
 import React from "react";
 import {View, Text, StyleSheet, Image} from 'react-native';
 import { PanGestureHandler } from "react-native-gesture-handler";
-import Animated, { Easing, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, { Easing,
+    interpolateNode,
+    useAnimatedGestureHandler,
+    useAnimatedStyle,
+    useSharedValue,
+    withTiming,
+    Extrapolate,
+    interpolate,
+    Extrapolation
+} from "react-native-reanimated";
 
 const Bubble = ({message, sender, time, isCurrentUser}) => {
     const translateX = useSharedValue(0);
@@ -11,12 +20,17 @@ const Bubble = ({message, sender, time, isCurrentUser}) => {
             context.translateX = translateX.value //We can store global and retrievable data in the context object
         },
         onActive: (event, context) => {
-            translateX.value = event.translationX + context.translateX;
+            const interpoledTrans = interpolate(event.translationX, [0, 400], [0, 200], {
+                extrapolateLeft:Extrapolation.CLAMP,
+                extrapolateRight:Extrapolation.CLAMP,
+            });
+
+            translateX.value = interpoledTrans + context.translateX;
         },
         onEnd: () => {
             translateX.value = withTiming(0, {
                 duration:100, //in ms
-                easing: Easing.in()
+                // easing: Easing.in()
             });
         },
     });
