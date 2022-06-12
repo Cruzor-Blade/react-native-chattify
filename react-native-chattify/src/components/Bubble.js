@@ -53,7 +53,7 @@ const Bubble = ({message, sender, time, isCurrentUser, onReply, id}) => {
     });
 
     return (
-        <PanGestureHandler onGestureEvent={panGestureEvent}>
+        <PanGestureHandler activeOffsetX={[-30,30]} onGestureEvent={panGestureEvent}>
             <Animated.View style={[styles.container, rBubbleStyles, !isCurrentUser?{alignSelf:'flex-start'}:null]}>
                 <View style={[styles.messageBox, !isCurrentUser?{marginLeft:11, marginRight:0, borderBottomLeftRadius:0, borderBottomRightRadius:10, backgroundColor:'#D3D3D3'}:null]}>
                     <Text style={[styles.message, !isCurrentUser? {color:'#006AFF'}:null]}>
