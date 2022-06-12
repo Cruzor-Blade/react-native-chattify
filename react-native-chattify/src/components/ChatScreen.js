@@ -1,53 +1,23 @@
 import React, {useState} from "react";
-import {View, StyleSheet, TextInput, Image, TouchableOpacity} from 'react-native';
+import {View, Text, FlatList, StyleSheet, TextInput, Image, TouchableOpacity} from 'react-native';
 import Bubble from "./Bubble";
-import { FlatList } from "react-native-gesture-handler";
 
-const coversation = [
-    {id:1, 'message':'Hey bro, how are you?', sender:'Cruzor Blade', time:'3 hours ago'},
-    {id:2, 'message':'I am good and you?', sender:'Epic Suave', time:'45 min ago'},
-    {id:3, 'message':'I am also good', sender:'Kyzer', time:'32 min ago'},
-    {id:4, 'message':'Are you ready for the night party? There will be a huge amount of people there', sender:'Cruzor Blade', time:'28 min ago'},
-    {id:5, 'message':'Booya!! More than ready. Trust me :)', sender:'Cruzor Blade', time:'23 min ago'},
-    {id:6, 'message':'What are you doing actually?', sender:'Epic Suave', time:'17 min ago'},
-    {id:7, 'message':'Nothing fancy, just typing some texts', sender:'Metanymous', time:'15 min ago'},
-    {id:8, 'message':'Can i help you?', sender:'Metanymous', time:'9 min ago'},
-    {id:9, 'message':'No it is ok. I am pretty sure i will be done before the night', sender:'Cruzor Blade', time:'5 min ago'},
-    {id:10, 'message':'Ah ok. Then, have a good day ;)', sender:'Epic Suave', time:'1 min ago'},
-    {id:11, 'message':'Hey bro, how are you?', sender:'Cruzor Blade', time:'3 hours ago'},
-    {id:12, 'message':'I am good and you?', sender:'Epic Suave', time:'45 min ago'},
-    {id:13, 'message':'I am also good', sender:'Kyzer', time:'32 min ago'},
-    {id:14, 'message':'Are you ready for the night party? There will be a huge amount of people there', sender:'Cruzor Blade', time:'28 min ago'},
-    {id:15, 'message':'Booya!! More than ready. Trust me :)', sender:'Cruzor Blade', time:'23 min ago'},
-    {id:16, 'message':'What are you doing actually?', sender:'Epic Suave', time:'17 min ago'},
-    {id:17, 'message':'Nothing fancy, just typing some texts', sender:'Metanymous', time:'15 min ago'},
-    {id:18, 'message':'Can i help you?', sender:'Metanymous', time:'9 min ago'},
-    {id:19, 'message':'No it is ok. I am pretty sure i will be done before the night', sender:'Cruzor Blade', time:'5 min ago'},
-    {id:20, 'message':'Ah ok. Then, have a good day ;)', sender:'Epic Suave', time:'1 min ago'},
-];
 
-const ChatScreen = () => {
-    const [messages, setMessages] = useState(coversation);
+
+const ChatScreen = ({onSend, messages, inputStyles, sendIcon, sendButtonStyles, replyContainerStyles}) => {
     const [replyTo, setReplyTo] = useState(null);
+    const [message, setMessage] = useState('');
 
     const onReply = (id) => {
         // "worklet"; //This specifies that the function is to be ran on the UI thread
-        console.log('Replying to: ', id);
+        setReplyTo(id);
+    };
+
+    const onCancelReply = () => {
+        setReplyTo(null);
     }
     return (
-        <View style={{flexDirection:'column'}}>
-            <View style={styles.messageView}>
-                <TextInput
-                    style={styles.msgInput}
-                    placeholder="type a message..."
-                    multiline={true}
-                />
-                <TouchableOpacity>
-                    <View style={styles.sendBtn}>
-                        <Image style={styles.sendIcon} source={require('./paperplane.png')} />
-                    </View>
-                </TouchableOpacity>
-            </View>
+        <View style={{flex:1}}>
             <FlatList
             data={messages}
             keyExtractor={item => item.id.toString()}
@@ -58,12 +28,43 @@ const ChatScreen = () => {
                     sender={item.sender}
                     message={item.message}
                     time={item.time}
-                    isCurrentUser={item.id == 1}
+                    isCurrentUser={[1, 6, 13, 16].includes(item.id)}
                 />
             }
-            style={{marginBottom:50}}
-            contentContainerStyle={{paddingBottom:10}}
+            style={{marginBottom: replyTo? 80:50}}
+            contentContainerStyle={{paddingTop:10,paddingBottom:20}}
             />
+            <View style={[styles.messageView, replyTo? {height:90}:null]}>
+                {replyTo?
+                    <View style={[styles.replyContainer, replyContainerStyles]}>
+                        <View>
+                        <Text numberOfLines={1} style={{fontSize:15, color:"#444444"}}>
+                            {messages.filter(msg => msg.id === replyTo)[0].message} 
+                        </Text>
+                        </View>
+                        <TouchableOpacity onPress={onCancelReply}>
+                            <Image style={{height:20, width:20, marginLeft:10, padding:10, tintColor:'black'}} source={require('./close.png')} />
+                        </TouchableOpacity>
+                    </View>
+                :null}
+                <View style={{flexDirection:'row', alignItems:'center'}}>
+                    <TextInput
+                        style={[styles.msgInput, inputStyles]}
+                        placeholder="type a message..."
+                        multiline={true}
+                        onChangeText={(text) => setMessage(text)}
+                    />
+                    <TouchableOpacity onPress={() => { if (message) onSend({message, replyTo})}}>
+                        <View style={[styles.sendBtn, sendButtonStyles]}>
+                            {
+                                sendIcon ? sendIcon()
+                                    :
+                                <Image style={styles.sendIcon} source={require('./paperplane.png')} />
+                            }
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </View>
         </View>
     )
 }
@@ -72,17 +73,26 @@ export default ChatScreen;
 
 const styles = StyleSheet.create({
     messageView: {
-        height:60,
+        height:62,
         width:'100%',
-        // borderWidth:1,
-        // backgroundColor:'blue',
         position:'absolute',
         bottom:0,
-        flexDirection:'row',
+        // flexDirection:'row',
         paddingHorizontal:10,
-        // paddingVertical:6,
         paddingTop:10,
         alignItems:'center',
+    },
+    replyContainer: {
+        width:'90%',
+        backgroundColor:"#f3f3f3",
+        borderRadius:5,
+        marginHorizontal:10,
+        paddingHorizontal:10,
+        marginTop:2,
+        flexDirection:'row',
+        justifyContent:'space-between',
+        alignItems:'center',
+        flexGrow:1,
     },
     msgInput: {
         backgroundColor:"#e3e3e3",
