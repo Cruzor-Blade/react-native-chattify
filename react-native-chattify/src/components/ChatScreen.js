@@ -4,7 +4,7 @@ import Bubble from "./Bubble";
 
 
 
-const ChatScreen = ({onSend, chatContainerStyles, messages, inputStyles, sendIcon, sendButtonStyles, replyContainerStyles, keyExtractor, isCurrentUser, containerStyles}) => {
+const ChatScreen = ({onSend, chatContainerStyles, bubbleReplyStyles, bubbleReplyTextStyles, messages, inputStyles, sendIcon, sendButtonStyles, replyContainerStyles, keyExtractor, isCurrentUser, containerStyles}) => {
     const [replyTo, setReplyTo] = useState(null);
     const [message, setMessage] = useState('');
 
@@ -28,7 +28,11 @@ const ChatScreen = ({onSend, chatContainerStyles, messages, inputStyles, sendIco
                     sender={item.sender}
                     message={item.message}
                     time={item.time}
+                    isReplyTo={item.isReplyTo}
+                    replyToMessage={item.isReplyTo? messages.filter(msg => msg.id == item.isReplyTo)[0].message:undefined}
                     isCurrentUser={isCurrentUser(item)}
+                    bubbleReplyStyles={bubbleReplyStyles}
+                    bubbleReplyTextStyles={bubbleReplyTextStyles}
                 />
             }
             style={{marginBottom: replyTo? 80:50}}
@@ -52,9 +56,14 @@ const ChatScreen = ({onSend, chatContainerStyles, messages, inputStyles, sendIco
                         style={[styles.msgInput, inputStyles]}
                         placeholder="type a message..."
                         multiline={true}
+                        value={message}
                         onChangeText={(text) => setMessage(text)}
                     />
-                    <TouchableOpacity onPress={() => { if (message) onSend({message, replyTo})}}>
+                    <TouchableOpacity onPress={() => { if (message){
+                        onSend({message, isReplyTo:replyTo})
+                        setMessage('');
+                        setReplyTo(null);
+                        }}}>
                         <View style={[styles.sendBtn, sendButtonStyles]}>
                             {
                                 sendIcon ? sendIcon()
@@ -93,6 +102,7 @@ const styles = StyleSheet.create({
         justifyContent:'space-between',
         alignItems:'center',
         flexGrow:1,
+        height:25
     },
     msgInput: {
         backgroundColor:"#e3e3e3",
@@ -105,7 +115,8 @@ const styles = StyleSheet.create({
         alignItems:'center',
         textAlignVertical:'center',
         paddingBottom:5,
-        marginVertical:5
+        marginVertical:5,
+        maxHeight:50
     },
     sendBtn: {
         // flex:1,

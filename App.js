@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { View, Text } from 'react-native';
 import Svg,
 { Rect,
@@ -25,24 +25,27 @@ const coversation = [
   {id:14, 'message':'Are you ready for the night party? There will be a huge amount of people there', sender:'Cruzor Blade', time:'28 min ago'},
   {id:15, 'message':'Booya!! More than ready. Trust me :)', sender:'Cruzor Blade', time:'23 min ago'},
   {id:16, 'message':'What are you doing actually?', sender:'Epic Suave', time:'17 min ago'},
-  {id:17, 'message':'Nothing fancy, just typing some texts', sender:'Metanymous', time:'15 min ago'},
-  {id:18, 'message':'Can i help you?', sender:'Metanymous', time:'9 min ago'},
+  {id:17, 'message':'Nothing fancy, just typing some texts', sender:'Metanymous', time:'15 min ago', isReplyTo:5},
+  {id:18, 'message':'Can i help you?', sender:'Metanymous', time:'9 min ago', isReplyTo:8},
   {id:19, 'message':'No it is ok. I am pretty sure i will be done before the night', sender:'Cruzor Blade', time:'5 min ago'},
-  {id:20, 'message':'Ah ok. Then, have a good day ;)', sender:'Epic Suave', time:'1 min ago'},
+  {id:20, 'message':'Ah ok. Then, have a good day ;)', sender:'Epic Suave', time:'1 min ago', isReplyTo:18},
 ];
 
 
 const App = () => {
-  const onMsgSend = (obj) => {
-    console.log('Message properties: ', obj)
+  const [messages, setMessages] = useState(coversation)
+  const onMsgSend = async(obj) => {
+    obj.id= 10000*(Math.random())
+    console.log('Message object: ', obj)
+    setMessages((prevMgs) => [...prevMgs, obj]);
   }
   return (
     <GestureHandlerRootView style={{flex:1}}>
       <ChatScreen
         onSend={onMsgSend}
-        messages={coversation}
+        messages={messages}
         keyExtractor={item => item.id.toString()}
-        isCurrentUser={(item) => [1, 6, 13, 16].includes(item.id)}
+        isCurrentUser={(item) => [1, 6, 13, 16, 18].includes(item.id)}
       />
     </GestureHandlerRootView>
   )

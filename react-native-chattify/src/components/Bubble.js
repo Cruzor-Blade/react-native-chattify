@@ -14,7 +14,7 @@ import Animated, { Easing,
     useDerivedValue
 } from "react-native-reanimated";
 
-const Bubble = ({message, sender, time, isCurrentUser, onReply, id}) => {
+const Bubble = ({message, sender, bubbleReplyStyles, bubbleReplyTextStyles, time, isCurrentUser, onReply, id, isReplyTo, replyToMessage}) => {
     const windowWidth = Dimensions.get('window').width;
     const translateX = useSharedValue(0);
 
@@ -56,6 +56,15 @@ const Bubble = ({message, sender, time, isCurrentUser, onReply, id}) => {
         <PanGestureHandler activeOffsetX={[-30,30]} onGestureEvent={panGestureEvent}>
             <Animated.View style={[styles.container, rBubbleStyles, !isCurrentUser?{alignSelf:'flex-start'}:null]}>
                 <View style={[styles.messageBox, !isCurrentUser?{marginLeft:11, marginRight:0, borderBottomLeftRadius:0, borderBottomRightRadius:10, backgroundColor:'#D3D3D3'}:null]}>
+                    {isReplyTo?
+                    ( 
+                        <View style={[{padding:3, borderRadius:5, backgroundColor:isCurrentUser? 'rgba(211, 211, 211, 0.5)' : 'rgba(0, 106, 255, 0.4)'}, bubbleReplyStyles]}>
+                            <Text style={[{color:'#333333'}, bubbleReplyTextStyles]} numberOfLines={1} >{replyToMessage || '. . .'}</Text>
+                        </View>
+                    )
+                        :
+                    null
+                    }
                     <Text style={[styles.message, !isCurrentUser? {color:'#006AFF'}:null]}>
                         {message || 'Hello hda saj kjsa jsa kusajisa usa  sdjkh sakhsa kusa mhisa sahjk sajhj sahjhn sjuian there'}
                     </Text>
