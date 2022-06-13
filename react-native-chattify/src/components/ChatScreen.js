@@ -4,7 +4,7 @@ import Bubble from "./Bubble";
 
 
 
-const ChatScreen = ({onSend, messages, inputStyles, sendIcon, sendButtonStyles, replyContainerStyles}) => {
+const ChatScreen = ({onSend, chatContainerStyles, messages, inputStyles, sendIcon, sendButtonStyles, replyContainerStyles, keyExtractor, isCurrentUser, containerStyles}) => {
     const [replyTo, setReplyTo] = useState(null);
     const [message, setMessage] = useState('');
 
@@ -17,10 +17,10 @@ const ChatScreen = ({onSend, messages, inputStyles, sendIcon, sendButtonStyles, 
         setReplyTo(null);
     }
     return (
-        <View style={{flex:1}}>
+        <View style={[{flex:1}, containerStyles]}>
             <FlatList
             data={messages}
-            keyExtractor={item => item.id.toString()}
+            keyExtractor={keyExtractor}
             renderItem={({item}) => 
                 <Bubble
                     onReply={onReply}
@@ -28,11 +28,11 @@ const ChatScreen = ({onSend, messages, inputStyles, sendIcon, sendButtonStyles, 
                     sender={item.sender}
                     message={item.message}
                     time={item.time}
-                    isCurrentUser={[1, 6, 13, 16].includes(item.id)}
+                    isCurrentUser={isCurrentUser(item)}
                 />
             }
             style={{marginBottom: replyTo? 80:50}}
-            contentContainerStyle={{paddingTop:10,paddingBottom:20}}
+            contentContainerStyle={[{paddingTop:10,paddingBottom:20}, chatContainerStyles]}
             />
             <View style={[styles.messageView, replyTo? {height:90}:null]}>
                 {replyTo?

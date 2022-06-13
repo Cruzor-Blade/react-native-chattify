@@ -41,6 +41,8 @@ const App = () => {
       <ChatScreen
         onSend={onMsgSend}
         messages={coversation}
+        keyExtractor={item => item.id.toString()}
+        isCurrentUser={(item) => [1, 6, 13, 16].includes(item.id)}
       />
     </GestureHandlerRootView>
   )
