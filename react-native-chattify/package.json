@@ -26,5 +26,11 @@
   "bugs": {
     "url": "https://github.com/cruzor-blade/react-native-chattify/issues"
   },
-  "homepage": "https://github.com/cruzor-blade/react-native-chattify#readme"
+  "homepage": "https://github.com/cruzor-blade/react-native-chattify#readme",
+  "peerDependencies":{
+    "react": "*",
+    "react-native": "*",
+    "react-native-gesture-handler": "*",
+    "react-native-reanimated": "*"
+  }
 }
