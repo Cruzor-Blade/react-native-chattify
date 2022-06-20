@@ -1,12 +1,24 @@
-import React, {useState} from "react";
+import React, {useState, useRef, useEffect} from "react";
 import {View, Text, FlatList, StyleSheet, TextInput, Image, TouchableOpacity} from 'react-native';
 import Bubble from "./Bubble";
 
 
 
 const ChatScreen = ({onSend, chatContainerStyles, bubbleReplyStyles, bubbleReplyTextStyles, messages, inputStyles, sendIcon, sendButtonStyles, replyContainerStyles, keyExtractor, isCurrentUser, containerStyles}) => {
+    // const conversation = useRef(messages.reverse()).current;
+    let conversation = [];
+    function reverseMessages () {
+        for (const msgIdx in messages) {
+            console.log(msgIdx);
+            conversation.push(messages[messages.length-1-msgIdx]);
+        }
+        // console.log(conversation)
+    }
+    reverseMessages()
+
     const [replyTo, setReplyTo] = useState(null);
     const [message, setMessage] = useState('');
+    const listRef = useRef(null);
 
     const onReply = (id) => {
         // "worklet"; //This specifies that the function is to be ran on the UI thread
@@ -15,21 +27,33 @@ const ChatScreen = ({onSend, chatContainerStyles, bubbleReplyStyles, bubbleReply
 
     const onCancelReply = () => {
         setReplyTo(null);
+    };
+
+    const scrollToMessage = (id) => {
+        // console.log(id);
+        listRef.current?.scrollToIndex({
+            index: conversation.findIndex(msg => msg.id == id),
+            viewPosition:1
+        });
     }
+
     return (
         <View style={[{flex:1}, containerStyles]}>
             <FlatList
-            data={messages}
+            inverted={true}
+            ref={listRef}
+            data={conversation}
             keyExtractor={keyExtractor}
             renderItem={({item}) => 
                 <Bubble
                     onReply={onReply}
+                    scrollToMessage={scrollToMessage}
                     id={item.id}
                     sender={item.sender}
                     message={item.message}
                     time={item.time}
                     isReplyTo={item.isReplyTo}
-                    replyToMessage={item.isReplyTo? messages.filter(msg => msg.id == item.isReplyTo)[0].message:undefined}
+                    replyToMessage={item.isReplyTo? conversation.filter(msg => msg.id == item.isReplyTo)[0].message:undefined}
                     isCurrentUser={isCurrentUser(item)}
                     bubbleReplyStyles={bubbleReplyStyles}
                     bubbleReplyTextStyles={bubbleReplyTextStyles}
@@ -43,7 +67,7 @@ const ChatScreen = ({onSend, chatContainerStyles, bubbleReplyStyles, bubbleReply
                     <View style={[styles.replyContainer, replyContainerStyles]}>
                         <View>
                         <Text numberOfLines={1} style={{fontSize:15, color:"#444444"}}>
-                            {messages.filter(msg => msg.id === replyTo)[0].message} 
+                            {conversation.filter(msg => msg.id === replyTo)[0].message} 
                         </Text>
                         </View>
                         <TouchableOpacity onPress={onCancelReply}>
@@ -63,6 +87,7 @@ const ChatScreen = ({onSend, chatContainerStyles, bubbleReplyStyles, bubbleReply
                         onSend({message, isReplyTo:replyTo})
                         setMessage('');
                         setReplyTo(null);
+                        scrollToMessage(conversation.length-1);
                         }}}>
                         <View style={[styles.sendBtn, sendButtonStyles]}>
                             {

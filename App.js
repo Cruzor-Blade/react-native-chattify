@@ -28,7 +28,7 @@ const coversation = [
   {id:17, 'message':'Nothing fancy, just typing some texts', sender:'Metanymous', time:'15 min ago', isReplyTo:5},
   {id:18, 'message':'Can i help you?', sender:'Metanymous', time:'9 min ago', isReplyTo:8},
   {id:19, 'message':'No it is ok. I am pretty sure i will be done before the night', sender:'Cruzor Blade', time:'5 min ago'},
-  {id:20, 'message':'Ah ok. Then, have a good day ;)', sender:'Epic Suave', time:'1 min ago', isReplyTo:18},
+  {id:20, 'message':'Ah ok. Then, have a good day ;)', sender:'Epic Suave', time:'1 min ago', isReplyTo:15},
 ];
 
 

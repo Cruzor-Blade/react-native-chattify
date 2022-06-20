@@ -1,5 +1,5 @@
 import React from "react";
-import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
+import {View, TouchableOpacity, Text, StyleSheet, Image, Dimensions} from 'react-native';
 import { PanGestureHandler } from "react-native-gesture-handler";
 import Animated, { Easing,
     interpolateNode,
@@ -14,7 +14,7 @@ import Animated, { Easing,
     useDerivedValue
 } from "react-native-reanimated";
 
-const Bubble = ({message, sender, bubbleReplyStyles, bubbleReplyTextStyles, time, isCurrentUser, onReply, id, isReplyTo, replyToMessage}) => {
+const Bubble = ({message, sender, bubbleReplyStyles, bubbleReplyTextStyles, time, isCurrentUser, onReply, id, isReplyTo, replyToMessage, scrollToMessage}) => {
     const windowWidth = Dimensions.get('window').width;
     const translateX = useSharedValue(0);
 
@@ -55,12 +55,14 @@ const Bubble = ({message, sender, bubbleReplyStyles, bubbleReplyTextStyles, time
     return (
         <PanGestureHandler activeOffsetX={[-30,30]} onGestureEvent={panGestureEvent}>
             <Animated.View style={[styles.container, rBubbleStyles, !isCurrentUser?{alignSelf:'flex-start'}:null]}>
-                <View style={[styles.messageBox, !isCurrentUser?{marginLeft:11, marginRight:0, borderBottomLeftRadius:0, borderBottomRightRadius:10, backgroundColor:'#D3D3D3'}:null]}>
+                <View style={[styles.messageBox, !isCurrentUser?{marginLeft:6, marginRight:0, borderBottomLeftRadius:0, borderBottomRightRadius:10, backgroundColor:'#D3D3D3'}:null]}>
                     {isReplyTo?
                     ( 
-                        <View style={[{padding:3, borderRadius:5, backgroundColor:isCurrentUser? 'rgba(211, 211, 211, 0.5)' : 'rgba(0, 106, 255, 0.4)'}, bubbleReplyStyles]}>
-                            <Text style={[{color:'#333333'}, bubbleReplyTextStyles]} numberOfLines={1} >{replyToMessage || '. . .'}</Text>
-                        </View>
+                        <TouchableOpacity onPress={() => scrollToMessage(isReplyTo)}>
+                            <View style={[{padding:3, borderRadius:5, backgroundColor:isCurrentUser? 'rgba(211, 211, 211, 0.5)' : 'rgba(0, 106, 255, 0.4)'}, bubbleReplyStyles]}>
+                                <Text style={[{color:'#333333'}, bubbleReplyTextStyles]} numberOfLines={1} >{replyToMessage || '. . .'}</Text>
+                            </View>
+                        </TouchableOpacity>
                     )
                         :
                     null
@@ -96,7 +98,7 @@ const styles = StyleSheet.create({
     },
     messageBox: {
         backgroundColor:'#006AFF',
-        marginRight:11,
+        marginRight:6,
         maxWidth:'73%',
         minWidth:'50%',
         borderTopRightRadius:10,
@@ -127,11 +129,11 @@ const styles = StyleSheet.create({
     },
     chatside:{
         tintColor:'#006AFF',
-        height:50,
-        width:12,
+        height:30,
+        width:7,
         resizeMode:'stretch',
         position:'absolute',
         right:0,
         bottom:0
     }
-})
+});
