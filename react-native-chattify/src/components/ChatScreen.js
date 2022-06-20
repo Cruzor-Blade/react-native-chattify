@@ -4,7 +4,7 @@ import Bubble from "./Bubble";
 
 
 
-const ChatScreen = ({onSend, chatContainerStyles, bubbleReplyStyles, bubbleReplyTextStyles, messages, inputStyles, sendIcon, sendButtonStyles, replyContainerStyles, keyExtractor, isCurrentUser, containerStyles}) => {
+const ChatScreen = ({onSend, chatContainerStyles, bubbleReplyStyles, bubbleReplyTextStyles, messages, inputStyles, SendIcon, sendButtonStyles, replyContainerStyles, keyExtractor, isCurrentUser, containerStyles}) => {
     // const conversation = useRef(messages.reverse()).current;
     let conversation = [];
     function reverseMessages () {
@@ -91,7 +91,7 @@ const ChatScreen = ({onSend, chatContainerStyles, bubbleReplyStyles, bubbleReply
                         }}}>
                         <View style={[styles.sendBtn, sendButtonStyles]}>
                             {
-                                sendIcon ? sendIcon()
+                                SendIcon ? <SendIcon/>
                                     :
                                 <Image style={styles.sendIcon} source={require('./paperplane.png')} />
                             }
