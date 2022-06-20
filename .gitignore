@@ -33,6 +33,7 @@ local.properties
 # node.js
 #
 node_modules/
+react-native-chattify/
 npm-debug.log
 yarn-error.log
 
