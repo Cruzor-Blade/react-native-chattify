@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from "react";
+import React, {useState, useRef} from "react";
 import {View, Text, FlatList, StyleSheet, TextInput, Image, TouchableOpacity} from 'react-native';
 import Bubble from "./Bubble";
 
@@ -9,7 +9,7 @@ const ChatScreen = ({onSend, chatContainerStyles, bubbleReplyStyles, bubbleReply
     let conversation = [];
     function reverseMessages () {
         for (const msgIdx in messages) {
-            console.log(msgIdx);
+            // console.log(msgIdx);
             conversation.push(messages[messages.length-1-msgIdx]);
         }
         // console.log(conversation)

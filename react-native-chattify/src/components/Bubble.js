@@ -2,16 +2,13 @@ import React from "react";
 import {View, TouchableOpacity, Text, StyleSheet, Image, Dimensions} from 'react-native';
 import { PanGestureHandler } from "react-native-gesture-handler";
 import Animated, { Easing,
-    interpolateNode,
     useAnimatedGestureHandler,
     useAnimatedStyle,
     useSharedValue,
     withTiming,
-    Extrapolate,
     interpolate,
     Extrapolation,
     runOnJS,
-    useDerivedValue
 } from "react-native-reanimated";
 
 const Bubble = ({message, sender, bubbleReplyStyles, bubbleReplyTextStyles, time, isCurrentUser, onReply, id, isReplyTo, replyToMessage, scrollToMessage}) => {
