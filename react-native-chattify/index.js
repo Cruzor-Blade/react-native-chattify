@@ -1,3 +1,3 @@
-import Bubble from "./src/components/Bubble";
+import ChatScreen from "./src/components/ChatScreen";
 
-export {Bubble};
+export default ChatScreen;
