@@ -1,7 +1,7 @@
 import React from "react";
-import {View, TouchableOpacity, Text, StyleSheet, Image, Dimensions} from 'react-native';
+import {View, TouchableOpacity, Text, StyleSheet, Image, Dimensions, StyleProp, ViewStyle, TextStyle} from 'react-native';
 import { PanGestureHandler } from "react-native-gesture-handler";
-import Animated, { Easing,
+import Animated, { 
     useAnimatedGestureHandler,
     useAnimatedStyle,
     useSharedValue,
@@ -11,7 +11,38 @@ import Animated, { Easing,
     runOnJS,
 } from "react-native-reanimated";
 
-const Bubble = ({message, sender, bubbleReplyStyles, bubbleReplyTextStyles, time, isCurrentUser, onReply, id, isReplyTo, replyToMessage, scrollToMessage}) => {
+type BubblePropsType = {
+    message:string,
+    sender:string,
+    bubbleReplyStyles:StyleProp<ViewStyle>,
+    bubbleReplyTextStyles:StyleProp<TextStyle>,
+    time:string,
+    isCurrentUser:boolean,
+    onReply: (id: any) => void
+    id:string
+    isReplyTo?:string
+    replyToMessage?:string,
+    scrollToMessage:(id: any) => void
+};
+
+type PanGestureEventContext = {
+    translateX:number
+};
+
+const Bubble = ({
+        message,
+        sender,
+        bubbleReplyStyles,
+        bubbleReplyTextStyles,
+        time,
+        isCurrentUser,
+        onReply,
+        id,
+        isReplyTo,
+        replyToMessage,
+        scrollToMessage,
+    }:BubblePropsType) => {
+        
     const windowWidth = Dimensions.get('window').width;
     const translateX = useSharedValue(0);
 
@@ -20,10 +51,10 @@ const Bubble = ({message, sender, bubbleReplyStyles, bubbleReplyTextStyles, time
     };
 
     const panGestureEvent = useAnimatedGestureHandler({
-        onStart: (event, context) => {
+        onStart: (event, context:PanGestureEventContext) => {
             context.translateX = translateX.value //We can store global and retrievable data in the context object
         },
-        onActive: (event, context) => {
+        onActive: (event, context:PanGestureEventContext) => {
             const interpoledTrans = interpolate(event.translationX, [0, windowWidth/2, windowWidth], [0, windowWidth/4, windowWidth/3], {
                 extrapolateLeft:Extrapolation.CLAMP,
                 extrapolateRight:Extrapolation.EXTEND,

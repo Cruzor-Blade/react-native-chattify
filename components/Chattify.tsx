@@ -1,26 +1,55 @@
 import React, {useState, useRef} from "react";
-import {View, Text, FlatList, StyleSheet, TextInput, Image, TouchableOpacity} from 'react-native';
+import {View, Text, FlatList, StyleSheet, TextInput, Image, TouchableOpacity, TextStyle, StyleProp, ViewStyle} from 'react-native';
 import Bubble from "./Bubble";
+import { Message } from "../global/types";
+
+type ChattifyPropsType = {
+    onSend:(obj: any) => Promise<void>
+    chatContainerStyles?:StyleProp<ViewStyle>,
+    bubbleReplyStyles?:StyleProp<ViewStyle>,
+    bubbleReplyTextStyles?:StyleProp<TextStyle>,
+    messages:Message[],
+    inputStyles?:StyleProp<TextStyle>
+    SendIcon?:React.ElementType
+    sendButtonStyles?:StyleProp<ViewStyle>
+    replyContainerStyles?:StyleProp<ViewStyle>
+    keyExtractor:(item: Message) => string
+    isCurrentUser: (item: Message) => boolean
+    containerStyles?:StyleProp<ViewStyle>
+}
+
+const Chattify = ({
+        onSend,
+        chatContainerStyles,
+        bubbleReplyStyles,
+        bubbleReplyTextStyles,
+        messages,
+        inputStyles,
+        SendIcon,
+        sendButtonStyles,
+        replyContainerStyles,
+        keyExtractor,
+        isCurrentUser,
+        containerStyles,
+    }: ChattifyPropsType) => {
 
 
-
-const ChatScreen = ({onSend, chatContainerStyles, bubbleReplyStyles, bubbleReplyTextStyles, messages, inputStyles, SendIcon, sendButtonStyles, replyContainerStyles, keyExtractor, isCurrentUser, containerStyles}) => {
     // const conversation = useRef(messages.reverse()).current;
-    let conversation = [];
+    let conversation:Message[] = [];
     function reverseMessages () {
         for (const msgIdx in messages) {
             // console.log(msgIdx);
-            conversation.push(messages[messages.length-1-msgIdx]);
+            conversation.push(messages[messages.length-1-Number(msgIdx)]);
         }
         // console.log(conversation)
     }
     reverseMessages()
 
-    const [replyTo, setReplyTo] = useState(null);
+    const [replyTo, setReplyTo] = useState<string|null>(null);
     const [message, setMessage] = useState('');
-    const listRef = useRef(null);
+    const listRef = useRef<any>(null);
 
-    const onReply = (id) => {
+    const onReply = (id:string) => {
         // "worklet"; //This specifies that the function is to be ran on the UI thread
         setReplyTo(id);
     };
@@ -29,7 +58,7 @@ const ChatScreen = ({onSend, chatContainerStyles, bubbleReplyStyles, bubbleReply
         setReplyTo(null);
     };
 
-    const scrollToMessage = (id) => {
+    const scrollToMessage = (id:string) => {
         // console.log(id);
         listRef.current?.scrollToIndex({
             index: conversation.findIndex(msg => msg.id == id),
@@ -48,7 +77,7 @@ const ChatScreen = ({onSend, chatContainerStyles, bubbleReplyStyles, bubbleReply
                 <Bubble
                     onReply={onReply}
                     scrollToMessage={scrollToMessage}
-                    id={item.id}
+                    id={item.id.toString()}
                     sender={item.sender}
                     message={item.message}
                     time={item.time}
@@ -87,7 +116,7 @@ const ChatScreen = ({onSend, chatContainerStyles, bubbleReplyStyles, bubbleReply
                         onSend({message, isReplyTo:replyTo})
                         setMessage('');
                         setReplyTo(null);
-                        scrollToMessage(conversation.length-1);
+                        scrollToMessage((conversation.length-1).toString());
                         }}}>
                         <View style={[styles.sendBtn, sendButtonStyles]}>
                             {
@@ -103,7 +132,6 @@ const ChatScreen = ({onSend, chatContainerStyles, bubbleReplyStyles, bubbleReply
     )
 }
 
-export default ChatScreen;
 
 const styles = StyleSheet.create({
     messageView: {
@@ -158,4 +186,6 @@ const styles = StyleSheet.create({
         marginLeft:-4,
         tintColor:'#fff'
     }
-})
+});
+
+export default Chattify;
