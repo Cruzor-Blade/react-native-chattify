@@ -27,6 +27,7 @@ type BubblePropsType = {
 
 type PanGestureEventContext = {
     translateX:number
+    replyActive:boolean
 };
 
 const Bubble = ({
@@ -52,20 +53,24 @@ const Bubble = ({
 
     const panGestureEvent = useAnimatedGestureHandler({
         onStart: (event, context:PanGestureEventContext) => {
+            context.replyActive = false;
             context.translateX = translateX.value //We can store global and retrievable data in the context object
         },
-        onActive: (event, context:PanGestureEventContext) => {
+        onActive: (event, context) => {
             const interpoledTrans = interpolate(event.translationX, [0, windowWidth/2, windowWidth], [0, windowWidth/4, windowWidth/3], {
                 extrapolateLeft:Extrapolation.CLAMP,
                 extrapolateRight:Extrapolation.EXTEND,
             });
 
             translateX.value = interpoledTrans + context.translateX;
-        },
-        onEnd: () => {
-            if (translateX.value >=30) {
+            if (translateX.value >=50 && !context.replyActive) {
                 runOnJS(onDragEnd)();
+                context.replyActive = true;
+                // console.log('On reply')
             }
+        },
+        onEnd: (event, context) => {
+            context.replyActive = false;
             translateX.value = withTiming(0, {
                 duration:100, 
             });
