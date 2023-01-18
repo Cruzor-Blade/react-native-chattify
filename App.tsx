@@ -52,9 +52,6 @@ const App = () => {
         />
     </GestureHandlerRootView>
   )
-}
+};
 
-// const App = () => {
-//     return <HelloWorld/>
-// }
 export default App;

@@ -4,18 +4,30 @@ import Bubble from "./Bubble";
 import { Message } from "../global/types";
 
 type ChattifyPropsType = {
+    /** Function to call after pressing the message send button */
     onSend:(obj: any) => Promise<void>
+    /** Styles for the content container of FlatList renderer */
     chatContainerStyles?:StyleProp<ViewStyle>,
-    bubbleReplyStyles?:StyleProp<ViewStyle>,
-    bubbleReplyTextStyles?:StyleProp<TextStyle>,
+    /** Styles for the bubble reply view */
+    bubbleReplyStyles?:StyleProp<ViewStyle>
+    /** Styles for the bubble reply texts */
+    bubbleReplyTextStyles?:StyleProp<TextStyle>
+    /** Messages array */
     messages:Message[],
+    /** Text input styles */
     inputStyles?:StyleProp<TextStyle>
     SendIcon?:React.ElementType
     sendButtonStyles?:StyleProp<ViewStyle>
     replyContainerStyles?:StyleProp<ViewStyle>
     keyExtractor:(item: Message) => string
+    /** Boolean that tells if the current message have been sent by the current user*/
     isCurrentUser: (item: Message) => boolean
+    /** Styles for the container view of the chat */
     containerStyles?:StyleProp<ViewStyle>
+    /** Placeholder for the bottom input */
+    placeholder?:string
+    /** Enable multiline on the bottom input */
+    multiline?:boolean
 }
 
 const Chattify = ({
@@ -31,6 +43,8 @@ const Chattify = ({
         keyExtractor,
         isCurrentUser,
         containerStyles,
+        placeholder,
+        multiline
     }: ChattifyPropsType) => {
 
 
@@ -120,8 +134,8 @@ const Chattify = ({
                 <View style={{flexDirection:'row', alignItems:'center'}}>
                     <TextInput
                         style={[styles.msgInput, inputStyles]}
-                        placeholder="type a message..."
-                        multiline={true}
+                        placeholder={placeholder || "type a message..."}
+                        multiline={multiline || true}
                         value={message}
                         onChangeText={(text) => setMessage(text)}
                     />
