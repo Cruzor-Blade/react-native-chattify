@@ -23,6 +23,7 @@ type BubblePropsType = {
     isReplyTo?:string
     replyToMessage?:string,
     scrollToMessage:(id: any) => void
+    shallSameUser:boolean
 };
 
 type PanGestureEventContext = {
@@ -42,6 +43,7 @@ const Bubble = ({
         isReplyTo,
         replyToMessage,
         scrollToMessage,
+        shallSameUser
     }:BubblePropsType) => {
         
     const windowWidth = Dimensions.get('window').width;
@@ -85,10 +87,16 @@ const Bubble = ({
         };
     });
 
+    const extraBubleStyles:StyleProp<ViewStyle> = [
+        !isCurrentUser? {marginLeft:6, backgroundColor:'#D3D3D3'}:{marginRight:6},
+        !shallSameUser? {borderBottomLeftRadius:isCurrentUser?16:6, borderBottomRightRadius:isCurrentUser?6:16}:null
+
+    ]
+    
     return (
         <PanGestureHandler activeOffsetX={[-30,30]} onGestureEvent={panGestureEvent}>
-            <Animated.View style={[styles.container, rBubbleStyles, !isCurrentUser?{alignSelf:'flex-start'}:null]}>
-                <View style={[styles.messageBox, !isCurrentUser?{marginLeft:6, marginRight:0, borderBottomLeftRadius:0, borderBottomRightRadius:10, backgroundColor:'#D3D3D3'}:null]}>
+            <Animated.View style={[styles.container, rBubbleStyles, !isCurrentUser?{alignSelf:'flex-start'}:null, shallSameUser?{marginBottom:6}:{marginBottom:12}]}>
+                <View style={[styles.messageBox, extraBubleStyles]}>
                     {isReplyTo?
                     ( 
                         <TouchableOpacity onPress={() => scrollToMessage(isReplyTo)}>
@@ -112,10 +120,10 @@ const Bubble = ({
                         </Text>
                     </View>
                 </View>
-                <Image
+                {/* <Image
                     style={[styles.chatside, !isCurrentUser?{left:0, tintColor:'#D3D3D3', transform:[{rotateY:'180deg'}]}:null]}
                     source={require('./chatside.png')}
-                />
+                /> */}
             </Animated.View>
         </PanGestureHandler>
     )
@@ -127,16 +135,12 @@ const styles = StyleSheet.create({
     container:{
         alignSelf:'flex-end',
         flexDirection:'row',
-        marginVertical:6
     },
     messageBox: {
         backgroundColor:'#006AFF',
-        marginRight:6,
         maxWidth:'73%',
         minWidth:'50%',
-        borderTopRightRadius:10,
-        borderTopLeftRadius:10,
-        borderBottomLeftRadius:10,
+        borderRadius:16,
         paddingVertical:5,
         paddingHorizontal:10
     },

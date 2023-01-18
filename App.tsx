@@ -19,6 +19,7 @@ const coversation:Message[] = [
   {id:'13', 'message':'I am also good', sender:'Kyzer', time:'32 min ago'},
   {id:'14', 'message':'Are you ready for the night party? There will be a huge amount of people there', sender:'Cruzor Blade', time:'28 min ago'},
   {id:'15', 'message':'Booya!! More than ready. Trust me :)', sender:'Cruzor Blade', time:'23 min ago'},
+  {id:'21', 'message':'Booya!! More than ready. Trust me :)', sender:'Cruzor Blade', time:'23 min ago'},
   {id:'16', 'message':'What are you doing actually?', sender:'Epic Suave', time:'17 min ago'},
   {id:'17', 'message':'Nothing fancy, just typing some texts', sender:'Metanymous', time:'15 min ago', isReplyTo:'5'},
   {id:'18', 'message':'Can i help you?', sender:'Metanymous', time:'9 min ago', isReplyTo:'8'},
@@ -47,7 +48,7 @@ const App = () => {
             onSend={onMsgSend}
             messages={messages}
             keyExtractor={(item:Message) => item.id}
-            isCurrentUser={(item:Message) => ['1', '6', '13', '16', '18'].includes(item.id)}
+            isCurrentUser={(item:Message) => item.sender == 'Cruzor Blade'}
         />
     </GestureHandlerRootView>
   )

@@ -73,7 +73,7 @@ const Chattify = ({
             ref={listRef}
             data={conversation}
             keyExtractor={keyExtractor}
-            renderItem={({item}) => 
+            renderItem={({item, index}) => 
                 <Bubble
                     onReply={onReply}
                     scrollToMessage={scrollToMessage}
@@ -83,7 +83,8 @@ const Chattify = ({
                     time={item.time}
                     isReplyTo={item.isReplyTo}
                     replyToMessage={item.isReplyTo? conversation.filter(msg => msg.id == item.isReplyTo)[0].message:undefined}
-                    isCurrentUser={isCurrentUser(item)}
+                    isCurrentUser={isCurrentUser(item)} //check if the current message was sent by the current user
+                    shallSameUser={index == 0? false :conversation[index-1].sender===conversation[index].sender} //check if the next message was sent by the current user
                     bubbleReplyStyles={bubbleReplyStyles}
                     bubbleReplyTextStyles={bubbleReplyTextStyles}
                 />
