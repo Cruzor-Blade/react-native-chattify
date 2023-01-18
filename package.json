@@ -1,5 +1,5 @@
 {
-    "name": "Chattify",
+    "name": "react-native-chattify",
     "version": "1.0.0",
     "description": "This package helps you create chat applications in React Native very easily",
     "main": "index.js",
