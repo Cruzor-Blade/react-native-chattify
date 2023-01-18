@@ -49,7 +49,7 @@ const Bubble = ({
     const windowWidth = Dimensions.get('window').width;
     const translateX = useSharedValue(0);
 
-    const onDragEnd = () => { //On drag end is a wrapper around onReply for js execution
+    const onReplyDrag = () => { //onReplyDrag end is a wrapper around onReply for js execution
         onReply(id);
     };
 
@@ -66,9 +66,9 @@ const Bubble = ({
 
             translateX.value = interpoledTrans + context.translateX;
             if (translateX.value >=50 && !context.replyActive) {
-                runOnJS(onDragEnd)();
-                context.replyActive = true;
                 // console.log('On reply')
+                runOnJS(onReplyDrag)();
+                context.replyActive = true;
             }
         },
         onEnd: (event, context) => {
@@ -89,7 +89,7 @@ const Bubble = ({
 
     const extraBubleStyles:StyleProp<ViewStyle> = [
         !isCurrentUser? {marginLeft:6, backgroundColor:'#D3D3D3'}:{marginRight:6},
-        !shallSameUser? {borderBottomLeftRadius:isCurrentUser?16:6, borderBottomRightRadius:isCurrentUser?6:16}:null
+        !shallSameUser? {borderBottomLeftRadius:isCurrentUser?20:6, borderBottomRightRadius:isCurrentUser?6:20}:null
 
     ]
     
@@ -100,7 +100,7 @@ const Bubble = ({
                     {isReplyTo?
                     ( 
                         <TouchableOpacity onPress={() => scrollToMessage(isReplyTo)}>
-                            <View style={[{padding:3, borderRadius:5, backgroundColor:isCurrentUser? 'rgba(211, 211, 211, 0.5)' : 'rgba(0, 106, 255, 0.4)'}, bubbleReplyStyles]}>
+                            <View style={[{paddingVertical:3, paddingHorizontal:6, borderRadius:10, backgroundColor:isCurrentUser? 'rgba(211, 211, 211, 0.5)' : 'rgba(0, 106, 255, 0.4)'}, bubbleReplyStyles]}>
                                 <Text style={[{color:'#333333'}, bubbleReplyTextStyles]} numberOfLines={1} >{replyToMessage || '. . .'}</Text>
                             </View>
                         </TouchableOpacity>
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
         backgroundColor:'#006AFF',
         maxWidth:'73%',
         minWidth:'50%',
-        borderRadius:16,
+        borderRadius:20,
         paddingVertical:5,
         paddingHorizontal:10
     },
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
         bottom:0,
         // width:'60%',
         // right:20,
-        marginVertical:3
+        margin:3,
     },
     bottomText: {
         fontSize:13,

@@ -66,6 +66,14 @@ const Chattify = ({
         });
     }
 
+    const onSendPress = () => {
+        if (message){
+            onSend({message, isReplyTo:replyTo})
+            setMessage('');
+            setReplyTo(null);
+            scrollToMessage(conversation[0].id); // we pick the first element of the array because the array is reversed
+        }
+    }
     return (
         <View style={[{flex:1}, containerStyles]}>
             <FlatList
@@ -83,8 +91,12 @@ const Chattify = ({
                     time={item.time}
                     isReplyTo={item.isReplyTo}
                     replyToMessage={item.isReplyTo? conversation.filter(msg => msg.id == item.isReplyTo)[0].message:undefined}
-                    isCurrentUser={isCurrentUser(item)} //check if the current message was sent by the current user
-                    shallSameUser={index == 0? false :conversation[index-1].sender===conversation[index].sender} //check if the next message was sent by the current user
+                    //check if the current message was sent by the current user
+                    isCurrentUser={isCurrentUser(item)}
+                    
+                    //check if the next message was sent by the current user
+                    //We use the past and present index values because the array is reversed
+                    shallSameUser={index == 0? false :conversation[index-1].sender===conversation[index].sender}
                     bubbleReplyStyles={bubbleReplyStyles}
                     bubbleReplyTextStyles={bubbleReplyTextStyles}
                 />
@@ -101,7 +113,7 @@ const Chattify = ({
                         </Text>
                         </View>
                         <TouchableOpacity onPress={onCancelReply}>
-                            <Image style={{height:20, width:20, marginLeft:10, padding:10, tintColor:'black'}} source={require('./close.png')} />
+                            <Image style={{height:20, width:20, marginLeft:10, padding:10, tintColor:'black', transform:[{scale:1.2}]}} source={require('./close.png')} />
                         </TouchableOpacity>
                     </View>
                 :null}
@@ -113,12 +125,7 @@ const Chattify = ({
                         value={message}
                         onChangeText={(text) => setMessage(text)}
                     />
-                    <TouchableOpacity onPress={() => { if (message){
-                        onSend({message, isReplyTo:replyTo})
-                        setMessage('');
-                        setReplyTo(null);
-                        scrollToMessage((conversation.length-1).toString());
-                        }}}>
+                    <TouchableOpacity onPress={onSendPress}>
                         <View style={[styles.sendBtn, sendButtonStyles]}>
                             {
                                 SendIcon ? <SendIcon/>
@@ -148,7 +155,7 @@ const styles = StyleSheet.create({
     replyContainer: {
         width:'90%',
         backgroundColor:"#f3f3f3",
-        borderRadius:5,
+        borderRadius:8,
         marginHorizontal:10,
         paddingHorizontal:10,
         marginTop:2,
