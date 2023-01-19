@@ -50,14 +50,9 @@ const Chattify = ({
 
     // const conversation = useRef(messages.reverse()).current;
     let conversation:Message[] = [];
-    function reverseMessages () {
-        for (const msgIdx in messages) {
-            // console.log(msgIdx);
-            conversation.push(messages[messages.length-1-Number(msgIdx)]);
-        }
-        // console.log(conversation)
-    }
-    reverseMessages()
+
+    //slice() creates a copy of the array, so that reverse() will not be modifying the original messages array 
+    conversation = messages.slice().reverse();
 
     const [replyTo, setReplyTo] = useState<string|null>(null);
     const [message, setMessage] = useState('');
